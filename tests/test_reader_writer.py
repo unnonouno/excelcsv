@@ -38,17 +38,30 @@ class TestReader(unittest.TestCase):
 
 class TestWriter(unittest.TestCase):
 
-    def test_write(self):
-        io = StringIO()
-        writer = excelcsv.writer(io)
-        writer.writerow([u'a', u'b', u'c'])
-        writer.writerow([u'd', u'e', u'f'])
+    def setUp(self):
+        self.io = StringIO()
+        self.writer = excelcsv.writer(self.io)
 
-        value = io.getvalue()
+    def tearDown(self):
+        self.io.close()
+
+    def test_write(self):
+        self.writer.writerow([u'a', u'b', u'c'])
+        self.writer.writerow([u'd', u'e', u'f'])
+
+        value = self.io.getvalue()
         self.assertIsInstance(value, text_type)
         self.assertEqual(value, u'a,b,c\r\nd,e,f\r\n')
 
-        io.close()
+    def test_writerows(self):
+        self.writer.writerows([
+            [u'a', u'b', u'c'],
+            [u'd', u'e', u'f'],
+        ])
+
+        value = self.io.getvalue()
+        self.assertIsInstance(value, text_type)
+        self.assertEqual(value, u'a,b,c\r\nd,e,f\r\n')
 
 
 class TestDictReader(unittest.TestCase):
