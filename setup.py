@@ -6,6 +6,6 @@ setup(
     author='Yuya Unno',
     author_email='unnonouno@gmail.com',
     packages=['excelcsv'],
-    tests_require=['nose'],
+    tests_require=['nose', 'coverage'],
     test_suite='nose.collector',
 )
