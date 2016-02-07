@@ -7,26 +7,16 @@ def _utf8_encoder(unicode_line):
         yield line.encode('utf-8')
 
 
-class DictReader(csv.DictReader):
-
-    def __init__(self, input, **kwds):
-        csv.DictReader.__init__(self, _utf8_encoder(input), **kwds)
-
-    def next(self):
-        d = csv.DictReader.next(self)
-        # Convert keys and values to Unicode
-        return dict((k.decode('utf-8'), v.decode('utf-8'))
-                    for k, v in d.items())
-
-
 class reader(object):
 
     def __init__(self, f, dialect=csv.excel, **kwds):
         f = _utf8_encoder(f)
         self.reader = csv.reader(f, dialect=dialect, **kwds)
+        self.line_num = 0
 
     def next(self):
         row = self.reader.next()
+        self.line_num += 1
         return [s.decode('utf-8') for s in row]
 
     def __iter__(self):
@@ -51,3 +41,17 @@ class writer(object):
     def writerows(self, rows):
         for row in rows:
             self.writerow(row)
+
+
+class DictReader(csv.DictReader):
+
+    def __init__(self, f, fieldnames=None, *args, **kwds):
+        csv.DictReader.__init__(self, f, fieldnames=fieldnames, *args, **kwds)
+        self.reader = reader(f, *args, **kwds)
+
+
+class DictWriter(csv.DictWriter):
+
+    def __init__(self, f, fieldnames, dialect='excel', *args, **kwds):
+        csv.DictWriter.__init__(self, f, fieldnames, *args, **kwds)
+        self.writer = writer(f, dialect, *args, **kwds)

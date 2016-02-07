@@ -8,10 +8,16 @@ if sys.version_info[0] > 2:
     reader = csv.reader
     writer = csv.writer
 
+    DictReader = csv.DictReader
+    DictWriter = csv.DictWriter
+
 else:
     from excelcsv import py2
     reader = py2.reader
     writer = py2.writer
+
+    DictReader = py2.DictReader
+    DictWriter = py2.DictWriter
 
 
 @contextlib.contextmanager
