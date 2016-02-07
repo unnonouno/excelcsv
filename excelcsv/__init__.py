@@ -1,8 +1,11 @@
 import contextlib
 import csv
 import io
+import pkg_resources
 import sys
 
+
+__version__ = pkg_resources.get_distribution('excelcsv').version
 
 if sys.version_info[0] > 2:
     reader = csv.reader
