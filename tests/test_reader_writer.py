@@ -14,7 +14,7 @@ if sys.version_info[0] > 2:
 else:
     import StringIO
 
-    text_type = unicode
+    text_type = unicode  # NOQA
     StringIO = StringIO.StringIO
 
 
